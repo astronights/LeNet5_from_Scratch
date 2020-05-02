@@ -66,9 +66,11 @@ class LeNet5(object):
             print(input_label)
             return(entropy)
         else:
+            self.y_true = self.one_hot_y(input_label)
             cur_image = input_image
             for layer in self.layers:
                 print(layer+":", time.ctime())
+                print(cur_image.shape)
                 temp_cur = self.layers[layer].forward_prop_og(cur_image)
                 cur_image = temp_cur
             entropy = self.entropy_loss(cur_image, input_label)
@@ -99,3 +101,11 @@ class LeNet5(object):
             # print(delta.shape)
             temp_delta = self.layers[layer].backward_prop_og(delta, lr_global)
             delta = temp_delta
+
+        self.save_model()
+
+    def save_model(self):
+        directory = 'model/'
+        for layer in self.layer_names:
+            if(layer[0] == 'C' or layer[0] == 'F'):
+                np.savez_compressed(directory+layer, weights=self.layers[layer].kernel["weights"], bias=self.layers[layer].kernel["bias"])
