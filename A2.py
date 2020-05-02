@@ -124,13 +124,13 @@ def train(model, train_data, test_data, num_epoch, lr_global_list, batch_size):
         cost = 0
         mini_batches = random_mini_batches(train_data[0], train_data[1], batch_size)
         print('Training: ')
-        # for i in tqdm(range(len(mini_batches))):
-        #     batch_image, batch_label = mini_batches[i]
-        #     # For your implementation
-        #     loss = model.Forward_Propagation(batch_image, batch_label, 'train')
-        #     cost += loss
-        #     # For your implementation
-        #     model.Back_Propagation(lr_global)
+        for i in tqdm(range(len(mini_batches))):
+            batch_image, batch_label = mini_batches[i]
+            # For your implementation
+            loss = model.Forward_Propagation(batch_image, batch_label, 'train')
+            cost += loss
+            # For your implementation
+            model.Back_Propagation(lr_global)
         print("Done, total cost of epoch {}: {}".format(epoch + 1, cost))
         # For your implementation
         error01_train, _ = model.Forward_Propagation(train_data[0], train_data[1], 'test')
