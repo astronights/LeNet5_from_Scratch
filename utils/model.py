@@ -42,10 +42,12 @@ class LeNet5(object):
         z = np.exp(image)
         return(z/z.sum(axis=1, keepdims=True))
 
-    def entropy_loss(self, image, labels):
+    def entropy_loss(self, image):
         probs = self.softmax(image)
         self.y_pred = probs
         true_vals = np.squeeze(self.y_true)
+        print("Inside entropy loss...")
+        print(true_vals.shape, probs.shape)
         entropy = -np.sum(true_vals * np.log(probs))/probs.shape[0]
         return(entropy)
 
@@ -58,7 +60,7 @@ class LeNet5(object):
                 print(layer+":", time.ctime())
                 temp_cur = self.layers[layer].forward_prop_og(cur_image)
                 cur_image = temp_cur
-            entropy = self.entropy_loss(cur_image, input_label)
+            entropy = self.entropy_loss(cur_image)
             print(entropy)
             res = np.argmax(self.softmax(cur_image), axis=1)
             print(res)
@@ -73,10 +75,10 @@ class LeNet5(object):
                 print(cur_image.shape)
                 temp_cur = self.layers[layer].forward_prop_og(cur_image)
                 cur_image = temp_cur
-            entropy = self.entropy_loss(cur_image, input_label)
+            entropy = self.entropy_loss(cur_image)
             print(entropy)
             res = np.argmax(self.softmax(cur_image), axis=1)
-            return(res)
+            return(entropy, res)
 
     def save_to_file(self, res):
         with open('lenet_res.txt', 'a') as outfile:
