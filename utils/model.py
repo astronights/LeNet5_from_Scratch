@@ -62,6 +62,7 @@ class LeNet5(object):
             print(entropy)
             res = np.argmax(self.softmax(cur_image), axis=1)
             print(res)
+            self.save_to_file(res)
             print(input_label)
             return(entropy)
         else:
@@ -75,12 +76,10 @@ class LeNet5(object):
             res = np.argmax(self.softmax(cur_image), axis=1)
             return(res)
 
-    def check_layer_results():
-        with open(str(i)+'test.txt', 'w') as outfile:
-            outfile.write('# Array shape: {0}\n'.format(out.shape))
-            for data_slice in out:
-                np.savetxt(outfile, data_slice, fmt='%-7.2f')
-                outfile.write('# New slice\n')
+    def save_to_file(self, res):
+        with open('lenet_res.txt', 'a') as outfile:
+            outfile.write(''.join([str(x) for x in res]))
+            outfile.write('\n')
 
     def one_hot_y(self, labels):
         cat = np.eye(10)[labels]
