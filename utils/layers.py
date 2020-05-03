@@ -50,7 +50,7 @@ class LeNetLayer(ABC):
 
 class Input(LeNetLayer):
     def __init__(self, id, input_size, kernel_dims=(0,0), num_kernels=1, padding=0, stride=1, activation=None, path=None):
-        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation)
+        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path)
         self.output_size = (1, 32, 32)
 
     def forward_prop_og(self, image):
@@ -125,8 +125,8 @@ class Convolution(LeNetLayer):
 
 
 class MaxPooling(LeNetLayer):
-    def __init__(self, id, kernel_dims, num_kernels=1, input_size=None, padding=0, stride=1, activation=None):
-        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation)
+    def __init__(self, id, kernel_dims, num_kernels=1, input_size=None, padding=0, stride=1, activation=None, path=None):
+        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path)
         self.output_size = self._calc_output_size(self.input_size, self.kernel_dims,
                                                   self.padding, self.stride, self.input_size[0])
 
@@ -155,9 +155,9 @@ class MaxPooling(LeNetLayer):
         return(delta_x)
 
 class FullyConnected(LeNetLayer):
-    def __init__(self, id, input_size, output_size, num_kernels=1, padding=0, stride=1, activation=None):
+    def __init__(self, id, input_size, output_size, num_kernels=1, padding=0, stride=1, activation=None, path=None):
         kernel_dims = (input_size[0], output_size)
-        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation)
+        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path)
         self.output_size = (output_size, 1, 1)
         if(path):
             self.kernel = self._load_path(path)
