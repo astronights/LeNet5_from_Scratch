@@ -112,7 +112,7 @@ def train(model, train_data, test_data, num_epoch, lr_global_list, batch_size):
     st = time.time()
     cost_last, count = np.Inf, 0
     err_rate_list = []
-    for epoch in range(0, num_epoch):
+    for epoch in range(0, 1): #num_epoch
         print("---------- epoch", epoch + 1, "begin ----------")
         lr_global = lr_global_list[epoch]
         # print info
@@ -178,7 +178,7 @@ def main():
     plt.plot(x, err_rate_list[0])
     plt.plot(x, err_rate_list[1])
     plt.legend(['training data', 'testing data'], loc='upper right')
-    plt.show()
+    plt.savefig("Error_rate.png")
 
     # test model
     test(args.model_path, test_data)

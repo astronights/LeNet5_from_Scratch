@@ -7,7 +7,7 @@ from .activations import ReLU, Sigmoid, tanh
 
 
 class LeNetLayer(ABC):
-    def __init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation):
+    def __init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path):
         self.id = id
         self.input_size = input_size
         self.num_kernels = num_kernels
@@ -16,6 +16,7 @@ class LeNetLayer(ABC):
         self.stride = stride
         self.activation = eval(activation)() if activation else None
         self.kernel = None
+        self.path = path
 
     def _calc_output_size(self, N, F, p, stride, depth):
         try:
@@ -24,6 +25,13 @@ class LeNetLayer(ABC):
             print("Missing values in sizes...")
             return(None)
         return((depth, dim, dim))
+
+    def _gen_kernels(self,w_size, b_size):
+        return({"weights": np.random.uniform(-0.1, 0.1, w_size), "bias": np.random.uniform(-0.1, 0.1, b_size)})
+
+    def _load_path(self, path):
+        npz = np.load(path)
+        return(npz['weights'], npz['bias'])
 
     def print_layer(self, name):
         print(self.id, ": ", name)
@@ -41,7 +49,7 @@ class LeNetLayer(ABC):
 
 
 class Input(LeNetLayer):
-    def __init__(self, id, input_size, kernel_dims=(0,0), num_kernels=1, padding=0, stride=1, activation=None):
+    def __init__(self, id, input_size, kernel_dims=(0,0), num_kernels=1, padding=0, stride=1, activation=None, path=None):
         LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation)
         self.output_size = (1, 32, 32)
 
@@ -54,16 +62,16 @@ class Input(LeNetLayer):
 
 
 class Convolution(LeNetLayer):
-    def __init__(self, id, num_kernels, kernel_dims, input_size=None, padding=0, stride=1, activation=None):
-        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation)
+    def __init__(self, id, num_kernels, kernel_dims, input_size=None, padding=0, stride=1, activation=None, path=None):
+        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path)
         self.output_size = self._calc_output_size(self.input_size, self.kernel_dims,
                                                   self.padding, self.stride, self.num_kernels)
-        self._gen_kernels(self.input_size[0])
+        if(path):
+            self.kernel = self._load_path(path)
+        else:
+            self.kernel = self._gen_kernels((self.num_kernels, self.input_size[0], self.kernel_dims[0], self.kernel_dims[1]), self.num_kernels)
 
-    def _gen_kernels(self,depth):
-        filter_size = (self.num_kernels, depth, self.kernel_dims[0], self.kernel_dims[1])
-        self.kernel = {"weights": np.random.standard_normal(filter_size), "bias": np.random.standard_normal(self.num_kernels)}
-        self.kernel = {"weights": np.random.uniform(-0.1, 0.1, filter_size), "bias": np.random.uniform(-0.1, 0.1, self.num_kernels)}
+
 
     def _do_dot(self, image, filter):
         return(signal.convolve2d(image, filter, mode='valid').astype(np.float64))
@@ -151,11 +159,11 @@ class FullyConnected(LeNetLayer):
         kernel_dims = (input_size[0], output_size)
         LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation)
         self.output_size = (output_size, 1, 1)
-        self._gen_kernels()
+        if(path):
+            self.kernel = self._load_path(path)
+        else:
+            self.kernel = self._gen_kernels((self.num_kernels, self.input_size[0], self.kernel_dims[0], self.kernel_dims[1]), self.num_kernels)
 
-    def _gen_kernels(self):
-        self.kernel = {"weights": np.random.standard_normal(self.kernel_dims), "bias": np.random.standard_normal(self.output_size[0])}
-        self.kernel = {"weights": np.random.uniform(-0.1, 0.1, self.kernel_dims), "bias": np.random.uniform(-0.1, 0.1, self.output_size[0])}
 
     def forward_prop(self, image):
         res = np.matmul(image, self.kernels[0]['weights'])
