@@ -162,7 +162,7 @@ class FullyConnected(LeNetLayer):
         if(path):
             self.kernel = self._load_path(path)
         else:
-            self.kernel = self._gen_kernels((self.num_kernels, self.input_size[0], self.kernel_dims[0], self.kernel_dims[1]), self.num_kernels)
+            self.kernel = self._gen_kernels(self.kernel_dims, self.output_size[0])
 
 
     def forward_prop(self, image):
