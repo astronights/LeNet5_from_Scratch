@@ -7,7 +7,7 @@ from .activations import ReLU, Sigmoid, tanh
 
 
 class LeNetLayer(ABC):
-    def __init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path):
+    def __init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, load):
         self.id = id
         self.input_size = input_size
         self.num_kernels = num_kernels
@@ -16,7 +16,7 @@ class LeNetLayer(ABC):
         self.stride = stride
         self.activation = eval(activation)() if activation else None
         self.kernel = None
-        self.path = path
+        self.load = load
 
     def _calc_output_size(self, N, F, p, stride, depth):
         try:
@@ -29,9 +29,10 @@ class LeNetLayer(ABC):
     def _gen_kernels(self,w_size, b_size):
         return({"weights": np.random.uniform(-0.1, 0.1, w_size), "bias": np.random.uniform(-0.1, 0.1, b_size)})
 
-    def _load_path(self, path):
+    def _load_path(self, id):
+        path = "model/" + id + ".npz"
         npz = np.load(path)
-        return(npz['weights'], npz['bias'])
+        return({"weights": npz['weights'], "bias": npz['bias']})
 
     def print_layer(self, name):
         print(self.id, ": ", name)
@@ -49,8 +50,8 @@ class LeNetLayer(ABC):
 
 
 class Input(LeNetLayer):
-    def __init__(self, id, input_size, kernel_dims=(0,0), num_kernels=1, padding=0, stride=1, activation=None, path=None):
-        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path)
+    def __init__(self, id, input_size, kernel_dims=(0,0), num_kernels=1, padding=0, stride=1, activation=None, load=False):
+        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, load)
         self.output_size = (1, 32, 32)
 
     def forward_prop_og(self, image):
@@ -62,12 +63,12 @@ class Input(LeNetLayer):
 
 
 class Convolution(LeNetLayer):
-    def __init__(self, id, num_kernels, kernel_dims, input_size=None, padding=0, stride=1, activation=None, path=None):
-        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path)
+    def __init__(self, id, num_kernels, kernel_dims, input_size=None, padding=0, stride=1, activation=None, load=False):
+        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, load)
         self.output_size = self._calc_output_size(self.input_size, self.kernel_dims,
                                                   self.padding, self.stride, self.num_kernels)
-        if(path):
-            self.kernel = self._load_path(path)
+        if(load):
+            self.kernel = self._load_path(self.id)
         else:
             self.kernel = self._gen_kernels((self.num_kernels, self.input_size[0], self.kernel_dims[0], self.kernel_dims[1]), self.num_kernels)
 
@@ -125,8 +126,8 @@ class Convolution(LeNetLayer):
 
 
 class MaxPooling(LeNetLayer):
-    def __init__(self, id, kernel_dims, num_kernels=1, input_size=None, padding=0, stride=1, activation=None, path=None):
-        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path)
+    def __init__(self, id, kernel_dims, num_kernels=1, input_size=None, padding=0, stride=1, activation=None, load=False):
+        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, load)
         self.output_size = self._calc_output_size(self.input_size, self.kernel_dims,
                                                   self.padding, self.stride, self.input_size[0])
 
@@ -155,12 +156,12 @@ class MaxPooling(LeNetLayer):
         return(delta_x)
 
 class FullyConnected(LeNetLayer):
-    def __init__(self, id, input_size, output_size, num_kernels=1, padding=0, stride=1, activation=None, path=None):
+    def __init__(self, id, input_size, output_size, num_kernels=1, padding=0, stride=1, activation=None, load=False):
         kernel_dims = (input_size[0], output_size)
-        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, path)
+        LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, load)
         self.output_size = (output_size, 1, 1)
-        if(path):
-            self.kernel = self._load_path(path)
+        if(load):
+            self.kernel = self._load_path(self.id)
         else:
             self.kernel = self._gen_kernels(self.kernel_dims, self.output_size[0])
 

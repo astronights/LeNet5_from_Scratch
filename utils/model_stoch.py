@@ -1,7 +1,7 @@
 import time
 import numpy as np
 
-from .layers_stoch import Convolution, MaxPooling, FullyConnected
+# from .layers_stoch import Convolution, MaxPooling, FullyConnected
 
 # LeNet5 object
 class LeNet5(object):

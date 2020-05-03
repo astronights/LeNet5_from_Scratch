@@ -7,27 +7,28 @@ class LeNet5(object):
     def __init__(self):
         self.layers = {}
         self.layer_names = ['I0', 'C1', 'S2', 'C3', 'S4', 'C5', 'F6', 'F7']
+        load_models = False
         self.layers['I0'] = Input(id = 'I0', num_kernels=0,
                                   input_size=(32, 32, 1))
-        self.layers['C1'] = Convolution(id = 'C1', num_kernels=6, kernel_dims=(5,5),
+        self.layers['C1'] = Convolution(id = 'C1', num_kernels=6, kernel_dims=(5,5), load=load_models,
                                         input_size=self.layers['I0'].output_size)
         self.layers['S2'] = MaxPooling(id = 'S2', kernel_dims=(2,2), stride=2,
                                        input_size=self.layers['C1'].output_size,
                                        activation='ReLU')
-        self.layers['C3'] = Convolution(id = 'C3', num_kernels=16, kernel_dims=(5,5),
+        self.layers['C3'] = Convolution(id = 'C3', num_kernels=16, kernel_dims=(5,5), load=load_models,
                                         input_size=self.layers['S2'].output_size)
         self.layers['S4'] = MaxPooling(id = 'S4', kernel_dims=(2,2), stride=2,
                                        input_size=self.layers['C3'].output_size,
                                        activation='ReLU')
-        self.layers['C5'] = Convolution(id = 'C5', num_kernels=120, kernel_dims=(5,5),
+        self.layers['C5'] = Convolution(id = 'C5', num_kernels=120, kernel_dims=(5,5), load=load_models,
                                         input_size=self.layers['S4'].output_size,
                                         activation='ReLU')
         self.layers['F6'] = FullyConnected(id= 'F6',
-                                           input_size=self.layers['C5'].output_size,
+                                           input_size=self.layers['C5'].output_size, load=load_models,
                                            output_size=84,
                                            activation='ReLU')
         self.layers['F7'] = FullyConnected(id= 'F7',
-                                           input_size=self.layers['F6'].output_size,
+                                           input_size=self.layers['F6'].output_size, load=load_models,
                                            output_size=10)
         self.y_true = None
         self.y_pred = None
@@ -46,37 +47,37 @@ class LeNet5(object):
         probs = self.softmax(image)
         self.y_pred = probs
         true_vals = np.squeeze(self.y_true)
-        print("Inside entropy loss...")
-        print(true_vals.shape, probs.shape)
-        entropy = -np.sum(true_vals * np.log(probs))/probs.shape[0]
+        # print("Inside entropy loss...")
+        # print(true_vals.shape, probs.shape)
+        entropy = -np.sum(true_vals * np.log(probs))
         return(entropy)
 
     def Forward_Propagation(self, input_image, input_label, mode):
-        print("Forward Propagation")
+        # print("Forward Propagation")
         if(mode == 'train'):
             self.y_true = self.one_hot_y(input_label)
             cur_image = input_image
             for layer in self.layers:
-                print(layer+":", time.ctime())
+                # print(layer+":", time.ctime())
                 temp_cur = self.layers[layer].forward_prop_og(cur_image)
                 cur_image = temp_cur
             entropy = self.entropy_loss(cur_image)
-            print(entropy)
+            # print(entropy)
             res = np.argmax(self.softmax(cur_image), axis=1)
-            print(res)
+            # print(res)
             self.save_to_file(res)
-            print(input_label)
+            # print(input_label)
             return(entropy)
         else:
             self.y_true = self.one_hot_y(input_label)
             cur_image = input_image
             for layer in self.layers:
-                print(layer+":", time.ctime())
-                print(cur_image.shape)
+                # print(layer+":", time.ctime())
+                # print(cur_image.shape)
                 temp_cur = self.layers[layer].forward_prop_og(cur_image)
                 cur_image = temp_cur
             entropy = self.entropy_loss(cur_image)
-            print(entropy)
+            # print(entropy)
             res = np.argmax(self.softmax(cur_image), axis=1)
             return(entropy, res)
 
@@ -95,11 +96,11 @@ class LeNet5(object):
         return(delta.reshape(delta.shape + (1,1)))
 
     def Back_Propagation(self, lr_global):
-        print("Back Propagation")
+        # print("Back Propagation")
         delta = self.softmax_delta(self.y_true)
-        print(delta.shape)
+        # print(delta.shape)
         for layer in self.layer_names[::-1]:
-            print(layer+":", time.ctime())
+            # print(layer+":", time.ctime())
             # print(delta.shape)
             temp_delta = self.layers[layer].backward_prop_og(delta, lr_global)
             delta = temp_delta
