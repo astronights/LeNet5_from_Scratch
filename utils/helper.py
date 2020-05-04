@@ -6,7 +6,7 @@ class Helper():
 
     def im2col(image, kernel_dims, stride, padding):
         out_dim = (image.shape[2]+ (2*padding) -kernel_dims[0])//stride + 1
-        image_vec = np.zeros(image.shape[:2] + kernel_dims + (out_dim, out_dim))
+        image_vec = np.ndarray(image.shape[:2] + kernel_dims + (out_dim, out_dim))
         for i in range(kernel_dims[0]):
             x = i + out_dim
             for j in range(kernel_dims[1]):
