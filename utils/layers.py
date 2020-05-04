@@ -31,7 +31,7 @@ class LeNetLayer(ABC):
         return({"weights": np.random.uniform(-0.1, 0.1, w_size), "bias": np.random.uniform(-0.1, 0.1, b_size)})
 
     def _load_path(self, id):
-        path = "model/" + id + ".npz"
+        path = "layer/" + id + ".npz"
         npz = np.load(path)
         return({"weights": npz['weights'], "bias": npz['bias']})
 
@@ -55,11 +55,11 @@ class Input(LeNetLayer):
         LeNetLayer.__init__(self, id, num_kernels, kernel_dims, input_size, padding, stride, activation, load)
         self.output_size = (1, 32, 32)
 
-    def forward_prop_og(self, image):
+    def forward_prop(self, image):
         new_shape = (image.shape[0],) + self.output_size
         return(image.reshape(new_shape))
 
-    def backward_prop_og(self, delta, lr):
+    def backward_prop(self, delta, lr):
         pass
 
 
@@ -74,7 +74,7 @@ class Convolution(LeNetLayer):
             self.kernel = self._gen_kernels((self.num_kernels, self.input_size[0], self.kernel_dims[0], self.kernel_dims[1]), self.num_kernels)
 
 
-    def forward_prop_og(self, image):
+    def forward_prop(self, image):
         self.inputs = image
         image_vec = Helper.im2col(image, self.kernel_dims, self.stride, self.padding)
         weights_vec = self.kernel['weights'].reshape(self.kernel['weights'].shape[0], -1).T
@@ -86,7 +86,7 @@ class Convolution(LeNetLayer):
             output = self.activation.forward_prop(output)
         return(output)
 
-    def backward_prop_og(self, delta, lr):
+    def backward_prop(self, delta, lr):
         if(self.activation):
             delta = self.activation.backward_prop(delta)
 
@@ -113,12 +113,6 @@ class MaxPooling(LeNetLayer):
 
 
     def forward_prop(self, image):
-        res = measure.block_reduce(image, (2,2,1), np.max)
-        if(self.activation == 'RelU'):
-            return(np.maximum(res, 0))
-        return(res)
-
-    def forward_prop_og(self, image):
         self.inputs = image
         output = image.reshape(image.shape[0], image.shape[1], image.shape[2]//self.kernel_dims[0], self.kernel_dims[0],
                                image.shape[3]//self.kernel_dims[1], self.kernel_dims[1]).max(axis=(3,5))
@@ -127,7 +121,7 @@ class MaxPooling(LeNetLayer):
             output = self.activation.forward_prop(output)
         return(output)
 
-    def backward_prop_og(self, delta, lr):
+    def backward_prop(self, delta, lr):
         if(self.activation):
             delta = self.activation.backward_prop(delta)
         max_vals_map = np.repeat(np.repeat(self.outputs, self.stride, axis=2), self.stride, axis=3)
@@ -145,12 +139,7 @@ class FullyConnected(LeNetLayer):
         else:
             self.kernel = self._gen_kernels(self.kernel_dims, self.output_size[0])
 
-
     def forward_prop(self, image):
-        res = np.matmul(image, self.kernels[0]['weights'])
-        return(res)
-
-    def forward_prop_og(self, image):
         self.inputs = image
         output = np.dot(np.squeeze(image), self.kernel['weights']) + self.kernel['bias']
         output = output.reshape((image.shape[0], ) + self.output_size)
@@ -158,7 +147,7 @@ class FullyConnected(LeNetLayer):
             output = self.activation.forward_prop(output)
         return(output)
 
-    def backward_prop_og(self, delta, lr):
+    def backward_prop(self, delta, lr):
         if(self.activation):
             delta = self.activation.backward_prop(delta)
         delta_x = np.dot(np.squeeze(delta), self.kernel['weights'].T)

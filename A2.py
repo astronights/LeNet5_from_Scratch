@@ -144,7 +144,7 @@ def train(model, train_data, test_data, num_epoch, lr_global_list, batch_size):
         print("0/1 error of testing set: ", error01_test, "/", len(test_data[1]))
         print("Time used: ", time.time() - ste, "sec")
         print("---------- epoch", epoch + 1, "end ------------")
-        with open('model_data_' + str(epoch) + '.pkl', 'wb') as output:
+        with open('model/model_data_' + str(epoch) + '.pkl', 'wb') as output:
             pickle.dump(model, output, pickle.HIGHEST_PROTOCOL)
 
     err_rate_list = np.array(err_rate_list).T
@@ -157,8 +157,12 @@ def test(model_path, test_data):
     # read model
     with open(model_path, 'rb') as input_:
         model = pickle.load(input_)
-
-    error01, class_pred = model.Forward_Propagation(test_data[0], test_data[1], 'test')
+    error1 = 0.0
+    class_pred = []
+    for i in range(10):
+        error01_temp, class_pred_temp = model.Forward_Propagation(test_data[0], test_data[1], 'test')
+        error1 += error01_temp
+        class_pred.extend(class_pred_temp)
     print("error rate:", error01 / len(class_pred))
 
 
@@ -183,7 +187,7 @@ def main():
     plt.plot(x, err_rate_list[0])
     plt.plot(x, err_rate_list[1])
     plt.legend(['training data', 'testing data'], loc='upper right')
-    plt.savefig("Error_rate.png")
+    plt.savefig("error_rate.png")
 
     # test model
     test(args.model_path, test_data)

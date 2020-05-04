@@ -32,7 +32,7 @@ class LeNet5(object):
                                            output_size=10)
         self.y_true = None
         self.y_pred = None
-        # self.print_net()
+        self.print_net()
 
     def print_net(self):
         for layer in self.layers:
@@ -76,17 +76,12 @@ class LeNet5(object):
             for layer in self.layers:
                 # print(layer+":", time.ctime())
                 # print(cur_image.shape)
-                temp_cur = self.layers[layer].forward_prop_og(cur_image)
+                temp_cur = self.layers[layer].forward_prop(cur_image)
                 cur_image = temp_cur
             entropy = self.entropy_loss(cur_image)
             # print(entropy)
             res = np.argmax(self.softmax(cur_image), axis=1)
             return(entropy, res)
-
-    def save_to_file(self, res):
-        with open('lenet_res.txt', 'a') as outfile:
-            outfile.write(''.join([str(x) for x in res]))
-            outfile.write('\n')
 
     def one_hot_y(self, labels):
         cat = np.eye(10)[labels]
@@ -104,13 +99,13 @@ class LeNet5(object):
         for layer in self.layer_names[::-1]:
             # print(layer+":", time.ctime())
             # print(delta.shape)
-            temp_delta = self.layers[layer].backward_prop_og(delta, lr_global)
+            temp_delta = self.layers[layer].backward_prop(delta, lr_global)
             delta = temp_delta
 
-        self.save_model()
+        self.save_layers()
 
-    def save_model(self):
-        directory = 'model/'
+    def save_layers(self):
+        directory = 'layer/'
         for layer in self.layer_names:
             if(layer[0] == 'C' or layer[0] == 'F'):
                 np.savez_compressed(directory+layer, weights=self.layers[layer].kernel["weights"], bias=self.layers[layer].kernel["bias"])

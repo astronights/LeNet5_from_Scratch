@@ -9,4 +9,4 @@ TRAIN:
   batch_size: 256
 
 TEST:
-  model_path: model_data_19.pkl
+  model_path: model/model_data_19.pkl
