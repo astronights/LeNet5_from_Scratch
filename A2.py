@@ -112,7 +112,7 @@ def train(model, train_data, test_data, num_epoch, lr_global_list, batch_size):
     st = time.time()
     cost_last, count = np.Inf, 0
     err_rate_list = []
-    for epoch in range(0, 1): #num_epoch
+    for epoch in range(0, num_epoch):
         print("---------- epoch", epoch + 1, "begin ----------")
         lr_global = lr_global_list[epoch]
         # print info

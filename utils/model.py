@@ -65,7 +65,9 @@ class LeNet5(object):
             # print(entropy)
             res = np.argmax(self.softmax(cur_image), axis=1)
             # print(res)
-            self.save_to_file(res)
+            accuracy = 1 - (np.count_nonzero((res-input_label))/len(input_label))
+            print(accuracy)
+            # self.save_to_file(res)
             # print(input_label)
             return(entropy)
         else:
@@ -105,7 +107,7 @@ class LeNet5(object):
             temp_delta = self.layers[layer].backward_prop_og(delta, lr_global)
             delta = temp_delta
 
-        self.save_model()
+        # self.save_model()
 
     def save_model(self):
         directory = 'model/'

@@ -1,6 +1,7 @@
 from abc import ABC
 import math
 from scipy import signal
+from .helper import Helper
 import numpy as np
 
 from .activations import ReLU, Sigmoid, tanh
@@ -73,57 +74,36 @@ class Convolution(LeNetLayer):
             self.kernel = self._gen_kernels((self.num_kernels, self.input_size[0], self.kernel_dims[0], self.kernel_dims[1]), self.num_kernels)
 
 
-
-    def _do_dot(self, image, filter):
-        return(signal.convolve2d(image, filter, mode='valid').astype(np.float64))
-
-    def forward_prop(self, image):
-        output=np.zeros(self.output_size)
-        for k in range(output.shape[2]):
-            res = (signal.fftconvolve(image, self.kernels[k]['weights'], 'valid'))
-            output[:,:,k] = np.squeeze(res) + self.kernels[k]['bias']
-        im = np.array([[[1,2],[3,4],[5,6]],[[7,8],[9,10],[11,12]],[[-4,-5],[-1,-2],[0,1]]])
-        k = np.array([[[0,1],[1,0]], [[2,3], [3,1]]])
-        lol = np.zeros((2,2))
-        print(ndimage.convolve(input=im, weights=k, mode='constant', cval=0.0))
-        return(output)
-
-    def _transf_kernel(self, kernel):
-        return(np.rot90(kernel, 2, (2,3)))
-
-
     def forward_prop_og(self, image):
         self.inputs = image
-        output=np.zeros( (image.shape[0],) + self.output_size)
-        temp_kernel = self._transf_kernel(self.kernel["weights"])
-        for i in range(output.shape[0]):
-            for j in range(output.shape[1]):
-                for k in range(image.shape[1]):
-                    output[i,j] += self._do_dot(image[i, k], temp_kernel[j,k]).astype(np.float64)
-                output[i,j] += self.kernel["bias"][j]
+        image_vec = Helper.im2col(image, self.kernel_dims, self.stride, self.padding)
+        weights_vec = self.kernel['weights'].reshape(self.kernel['weights'].shape[0], -1).T
+
+        output = np.dot(image_vec, weights_vec) + self.kernel['bias']
+        # print(output.shape, self.output_size)
+        output = output.reshape((len(self.inputs), self.output_size[1], self.output_size[2], -1)).transpose(0,3,1,2)
         if(self.activation):
             output = self.activation.forward_prop(output)
-            # output = np.clip(output, a_min=0.0, a_max=None)
         return(output)
 
     def backward_prop_og(self, delta, lr):
         if(self.activation):
-            delts = self.activation.backward_prop(delta)
-        delta_x = np.zeros((delta.shape[0],) + self.input_size)
-        delta_w = np.zeros((self.num_kernels, self.input_size[0]) + self.kernel_dims)
-        delta_b = np.zeros(self.num_kernels)
+            delta = self.activation.backward_prop(delta)
 
-        for i in range(delta.shape[0]):
-            for j in range(self.num_kernels):
-                for k in range(self.input_size[1]-self.kernel_dims[0] + 1):
-                    for l in range(self.input_size[2]-self.kernel_dims[1] + 1):
-                        delta_x[i, :, k:k+self.kernel_dims[0], l:l+self.kernel_dims[1]] += delta[i, j, k, l].astype(np.float64)*self.kernel['weights'][j].astype(np.float64)
-                        delta_w[j,:,:,:] += delta[i, j, k, l].astype(np.float64) * self.inputs[i,:, k:k+self.kernel_dims[0], l:l+self.kernel_dims[0]].astype(np.float64)
-        delta_b = np.sum(delta, axis=(0,2,3))
+        delta = delta.transpose(0, 2, 3, 1).reshape(-1, self.num_kernels)
+
+        delta_b = np.sum(delta, axis=0)
+
+        delta_w = np.dot(Helper.im2col(self.inputs, self.kernel_dims, self.stride, self.padding).T, delta)
+        delta_w = delta_w.transpose(1, 0).reshape(self.kernel['weights'].shape)
+
+        delta_x = np.dot(delta, self.kernel['weights'].reshape(self.kernel['weights'].shape[0], -1))
+        delta_x = Helper.col2im(delta_x, self.inputs.shape, self.kernel_dims, self.stride, self.padding)
+
         self.kernel['weights'] -= (delta_w)*lr
         self.kernel['bias'] -= (delta_b)*lr
-        return(delta_x)
 
+        return delta_x
 
 class MaxPooling(LeNetLayer):
     def __init__(self, id, kernel_dims, num_kernels=1, input_size=None, padding=0, stride=1, activation=None, load=False):
@@ -149,7 +129,7 @@ class MaxPooling(LeNetLayer):
 
     def backward_prop_og(self, delta, lr):
         if(self.activation):
-            delts = self.activation.backward_prop(delta)
+            delta = self.activation.backward_prop(delta)
         max_vals_map = np.repeat(np.repeat(self.outputs, self.stride, axis=2), self.stride, axis=3)
         delta_map = np.repeat(np.repeat(delta, self.stride, axis=2), self.stride, axis=3)
         delta_x = (max_vals_map == self.inputs) * delta_map
@@ -184,7 +164,6 @@ class FullyConnected(LeNetLayer):
         delta_x = np.dot(np.squeeze(delta), self.kernel['weights'].T)
         delta_w = np.dot(np.squeeze(self.inputs.T) , np.squeeze(delta))
         delta_b = np.sum(delta, axis=0)
-        # print(delta_w[0])
         # print(delta_b)
         self.kernel['weights'] -= np.squeeze(delta_w)*lr
         self.kernel['bias'] -= np.squeeze(delta_b)*lr
