@@ -133,8 +133,13 @@ def train(model, train_data, test_data, num_epoch, lr_global_list, batch_size):
             model.Back_Propagation(lr_global)
         print("Done, total cost of epoch {}: {}".format(epoch + 1, cost))
         # For your implementation
-        error01_train, _ = model.Forward_Propagation(train_data[0], train_data[1], 'test')
-        error01_test, _ = model.Forward_Propagation(test_data[0], test_data[1], 'test')
+        error01_train = 0.0
+        error01_test = 0.0
+        for i in range(10):
+            error01_train_temp, _ = model.Forward_Propagation(train_data[0][i*6000:(i+1)*6000], train_data[1][i*6000:(i+1)*6000], 'test')
+            error01_test_temp, _ = model.Forward_Propagation(test_data[0][i*1000:(i+1)*1000], test_data[1][i*1000:(i+1)*1000], 'test')
+            error01_train += error01_train_temp
+            error01_test += error01_test_temp
         err_rate_list.append([error01_train/60000, error01_test/10000])
         print("0/1 error of testing set: ", error01_test, "/", len(test_data[1]))
         print("Time used: ", time.time() - ste, "sec")

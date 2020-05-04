@@ -32,7 +32,7 @@ class LeNet5(object):
                                            output_size=10)
         self.y_true = None
         self.y_pred = None
-        self.print_net()
+        # self.print_net()
 
     def print_net(self):
         for layer in self.layers:
