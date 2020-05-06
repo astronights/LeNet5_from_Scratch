@@ -59,7 +59,7 @@ class LeNet5(object):
             cur_image = input_image
             for layer in self.layers:
                 # print(layer+":", time.ctime())
-                temp_cur = self.layers[layer].forward_prop_og(cur_image)
+                temp_cur = self.layers[layer].forward_prop(cur_image)
                 cur_image = temp_cur
             entropy = self.entropy_loss(cur_image)
             # print(entropy)

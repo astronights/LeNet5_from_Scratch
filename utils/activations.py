@@ -25,11 +25,11 @@ class Sigmoid():
 
 class tanh():
     def __init__(self):
-        self.X = None
+        self.out = None
 
     def forward_prop(self, data):
-        self.X = data
-        return((np.exp(z) - np.exp(-z)) / (np.exp(z) + np.exp(-z)))
+        self.out = ((np.exp(data) - np.exp(-data)) / (np.exp(data) + np.exp(-data)))
+        return(self.out)
 
     def backward_prop(self, delta):
-        return(delta * (1 - np.power(tanh(z), 2)))
+        return(delta * (1 - np.power(self.out, 2)))

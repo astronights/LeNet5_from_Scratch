@@ -157,11 +157,11 @@ def test(model_path, test_data):
     # read model
     with open(model_path, 'rb') as input_:
         model = pickle.load(input_)
-    error1 = 0.0
+    error01 = 0.0
     class_pred = []
     for i in range(10):
-        error01_temp, class_pred_temp = model.Forward_Propagation(test_data[0], test_data[1], 'test')
-        error1 += error01_temp
+        error01_temp, class_pred_temp = model.Forward_Propagation(test_data[0][i*1000:(i+1)*1000], test_data[1][i*1000:(i+1)*1000], 'test')
+        error01 += error01_temp
         class_pred.extend(class_pred_temp)
     print("error rate:", error01 / len(class_pred))
 

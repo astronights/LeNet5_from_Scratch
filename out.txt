@@ -1,184 +1,254 @@
+I0 :  Input
+Input Size:  (32, 32, 1)
+Number of kernels:  0
+Kernal Dimensions:  (0, 0)
+Stride:  1
+Padding:  0
+Activation Function:  None
+Output Size:  (1, 32, 32)
+
+C1 :  Convolution
+Input Size:  (1, 32, 32)
+Number of kernels:  6
+Kernal Dimensions:  (5, 5)
+Stride:  1
+Padding:  0
+Activation Function:  None
+Output Size:  (6, 28, 28)
+
+S2 :  MaxPooling
+Input Size:  (6, 28, 28)
+Number of kernels:  1
+Kernal Dimensions:  (2, 2)
+Stride:  2
+Padding:  0
+Activation Function:  ReLU
+Output Size:  (6, 14, 14)
+
+C3 :  Convolution
+Input Size:  (6, 14, 14)
+Number of kernels:  16
+Kernal Dimensions:  (5, 5)
+Stride:  1
+Padding:  0
+Activation Function:  None
+Output Size:  (16, 10, 10)
+
+S4 :  MaxPooling
+Input Size:  (16, 10, 10)
+Number of kernels:  1
+Kernal Dimensions:  (2, 2)
+Stride:  2
+Padding:  0
+Activation Function:  ReLU
+Output Size:  (16, 5, 5)
+
+C5 :  Convolution
+Input Size:  (16, 5, 5)
+Number of kernels:  120
+Kernal Dimensions:  (5, 5)
+Stride:  1
+Padding:  0
+Activation Function:  ReLU
+Output Size:  (120, 1, 1)
+
+F6 :  FullyConnected
+Input Size:  (120, 1, 1)
+Number of kernels:  1
+Kernal Dimensions:  (120, 84)
+Stride:  1
+Padding:  0
+Activation Function:  ReLU
+Output Size:  (84, 1, 1)
+
+F7 :  FullyConnected
+Input Size:  (84, 1, 1)
+Number of kernels:  1
+Kernal Dimensions:  (84, 10)
+Stride:  1
+Padding:  0
+Activation Function:  None
+Output Size:  (10, 1, 1)
+
 ---------- epoch 1 begin ----------
 learning rate: 0.05
 batch size: 256
 Training: 
-100% 235/235 [01:37<00:00,  2.40it/s]
-Done, total cost of epoch 1: 50337.153067120336
-0/1 error of testing set:  2092.601210564146 / 10000
-Time used:  124.85491919517517 sec
+100% 235/235 [01:43<00:00,  2.26it/s]
+Done, total cost of epoch 1: 64305.68177081804
+0/1 error of testing set:  3011.2652505866517 / 10000
+Time used:  133.98741960525513 sec
 ---------- epoch 1 end ------------
 ---------- epoch 2 begin ----------
 learning rate: 0.05
 batch size: 256
 Training: 
-100% 235/235 [01:38<00:00,  2.39it/s]
-Done, total cost of epoch 2: 9433.090881446542
-0/1 error of testing set:  1237.085641812788 / 10000
-Time used:  124.46574807167053 sec
+100% 235/235 [01:50<00:00,  2.13it/s]
+Done, total cost of epoch 2: 9562.960890337918
+0/1 error of testing set:  1419.3508472908231 / 10000
+Time used:  140.54766201972961 sec
 ---------- epoch 2 end ------------
 ---------- epoch 3 begin ----------
 learning rate: 0.02
 batch size: 256
 Training: 
-100% 235/235 [01:36<00:00,  2.43it/s]
-Done, total cost of epoch 3: 6050.391278643999
-0/1 error of testing set:  857.5317224963029 / 10000
-Time used:  122.79839277267456 sec
+100% 235/235 [01:49<00:00,  2.15it/s]
+Done, total cost of epoch 3: 5943.190937552405
+0/1 error of testing set:  847.8947886579291 / 10000
+Time used:  139.47429060935974 sec
 ---------- epoch 3 end ------------
 ---------- epoch 4 begin ----------
 learning rate: 0.02
 batch size: 256
 Training: 
-100% 235/235 [01:35<00:00,  2.45it/s]
-Done, total cost of epoch 4: 5335.519738059255
-0/1 error of testing set:  784.2713982074326 / 10000
-Time used:  122.23313426971436 sec
+100% 235/235 [01:48<00:00,  2.16it/s]
+Done, total cost of epoch 4: 5239.941529921614
+0/1 error of testing set:  743.5490803177546 / 10000
+Time used:  137.98899626731873 sec
 ---------- epoch 4 end ------------
 ---------- epoch 5 begin ----------
 learning rate: 0.02
 batch size: 256
 Training: 
-100% 235/235 [01:37<00:00,  2.42it/s]
-Done, total cost of epoch 5: 4794.914422015821
-0/1 error of testing set:  666.5558498364654 / 10000
-Time used:  123.47033333778381 sec
+100% 235/235 [01:45<00:00,  2.23it/s]
+Done, total cost of epoch 5: 4690.5766335237895
+0/1 error of testing set:  726.1453526763861 / 10000
+Time used:  134.43832993507385 sec
 ---------- epoch 5 end ------------
 ---------- epoch 6 begin ----------
 learning rate: 0.01
 batch size: 256
 Training: 
-100% 235/235 [01:36<00:00,  2.44it/s]
-Done, total cost of epoch 6: 4303.093914829611
-0/1 error of testing set:  656.6590893220391 / 10000
-Time used:  122.48833274841309 sec
+100% 235/235 [01:46<00:00,  2.20it/s]
+Done, total cost of epoch 6: 4223.346182969096
+0/1 error of testing set:  646.7868666622392 / 10000
+Time used:  135.66736912727356 sec
 ---------- epoch 6 end ------------
 ---------- epoch 7 begin ----------
 learning rate: 0.01
 batch size: 256
 Training: 
-100% 235/235 [01:35<00:00,  2.45it/s]
-Done, total cost of epoch 7: 4095.37773978622
-0/1 error of testing set:  627.7227295194009 / 10000
-Time used:  122.14791822433472 sec
+100% 235/235 [01:46<00:00,  2.20it/s]
+Done, total cost of epoch 7: 4033.0408507193083
+0/1 error of testing set:  626.170143378564 / 10000
+Time used:  136.35917282104492 sec
 ---------- epoch 7 end ------------
 ---------- epoch 8 begin ----------
 learning rate: 0.01
 batch size: 256
 Training: 
-100% 235/235 [01:35<00:00,  2.45it/s]
-Done, total cost of epoch 8: 3922.7453269261155
-0/1 error of testing set:  598.0492848799611 / 10000
-Time used:  122.1113440990448 sec
+100% 235/235 [01:48<00:00,  2.16it/s]
+Done, total cost of epoch 8: 3884.1784554212277
+0/1 error of testing set:  602.343451896398 / 10000
+Time used:  138.07777190208435 sec
 ---------- epoch 8 end ------------
 ---------- epoch 9 begin ----------
 learning rate: 0.005
 batch size: 256
 Training: 
-100% 235/235 [01:36<00:00,  2.44it/s]
-Done, total cost of epoch 9: 3728.4271531671643
-0/1 error of testing set:  589.6030835199373 / 10000
-Time used:  122.62616014480591 sec
+100% 235/235 [01:47<00:00,  2.18it/s]
+Done, total cost of epoch 9: 3675.651945665764
+0/1 error of testing set:  575.7034758425642 / 10000
+Time used:  137.04989314079285 sec
 ---------- epoch 9 end ------------
 ---------- epoch 10 begin ----------
 learning rate: 0.005
 batch size: 256
 Training: 
-100% 235/235 [01:36<00:00,  2.43it/s]
-Done, total cost of epoch 10: 3645.8696054761663
-0/1 error of testing set:  574.645632956581 / 10000
-Time used:  122.79003095626831 sec
+100% 235/235 [01:46<00:00,  2.20it/s]
+Done, total cost of epoch 10: 3608.0737479438294
+0/1 error of testing set:  591.4806690824207 / 10000
+Time used:  135.49315094947815 sec
 ---------- epoch 10 end ------------
 ---------- epoch 11 begin ----------
 learning rate: 0.005
 batch size: 256
 Training: 
-100% 235/235 [01:36<00:00,  2.43it/s]
-Done, total cost of epoch 11: 3581.80866141882
-0/1 error of testing set:  567.9239592697274 / 10000
-Time used:  123.04442620277405 sec
+100% 235/235 [01:46<00:00,  2.22it/s]
+Done, total cost of epoch 11: 3541.4559332378385
+0/1 error of testing set:  569.3276753967351 / 10000
+Time used:  135.2526400089264 sec
 ---------- epoch 11 end ------------
 ---------- epoch 12 begin ----------
 learning rate: 0.005
 batch size: 256
 Training: 
-100% 235/235 [01:37<00:00,  2.42it/s]
-Done, total cost of epoch 12: 3518.882866737115
-0/1 error of testing set:  559.9143427631296 / 10000
-Time used:  123.26511311531067 sec
+100% 235/235 [01:44<00:00,  2.25it/s]
+Done, total cost of epoch 12: 3467.270726031115
+0/1 error of testing set:  551.3353732016599 / 10000
+Time used:  132.51203274726868 sec
 ---------- epoch 12 end ------------
 ---------- epoch 13 begin ----------
 learning rate: 0.001
 batch size: 256
 Training: 
-100% 235/235 [01:36<00:00,  2.44it/s]
-Done, total cost of epoch 13: 3408.959307585522
-0/1 error of testing set:  552.5955204063675 / 10000
-Time used:  122.39122915267944 sec
+100% 235/235 [01:45<00:00,  2.23it/s]
+Done, total cost of epoch 13: 3377.7280127474446
+0/1 error of testing set:  547.8500979496646 / 10000
+Time used:  134.93117809295654 sec
 ---------- epoch 13 end ------------
 ---------- epoch 14 begin ----------
 learning rate: 0.001
 batch size: 256
 Training: 
-100% 235/235 [01:35<00:00,  2.45it/s]
-Done, total cost of epoch 14: 3390.6207113570276
-0/1 error of testing set:  549.9652434634199 / 10000
-Time used:  121.90832710266113 sec
+100% 235/235 [01:54<00:00,  2.05it/s]
+Done, total cost of epoch 14: 3366.6763294202033
+0/1 error of testing set:  545.5894354926548 / 10000
+Time used:  145.039311170578 sec
 ---------- epoch 14 end ------------
 ---------- epoch 15 begin ----------
 learning rate: 0.001
 batch size: 256
 Training: 
-100% 235/235 [01:35<00:00,  2.46it/s]
-Done, total cost of epoch 15: 3378.4134053094413
-0/1 error of testing set:  550.7666104223019 / 10000
-Time used:  121.88498044013977 sec
+100% 235/235 [01:51<00:00,  2.11it/s]
+Done, total cost of epoch 15: 3352.1045548856227
+0/1 error of testing set:  543.8129103074833 / 10000
+Time used:  141.3322458267212 sec
 ---------- epoch 15 end ------------
 ---------- epoch 16 begin ----------
 learning rate: 0.001
 batch size: 256
 Training: 
-100% 235/235 [01:35<00:00,  2.46it/s]
-Done, total cost of epoch 16: 3365.7397905818366
-0/1 error of testing set:  549.3714887219146 / 10000
-Time used:  121.40670824050903 sec
+100% 235/235 [01:48<00:00,  2.18it/s]
+Done, total cost of epoch 16: 3339.4654127593094
+0/1 error of testing set:  544.9614846861949 / 10000
+Time used:  137.38515162467957 sec
 ---------- epoch 16 end ------------
 ---------- epoch 17 begin ----------
 learning rate: 0.001
 batch size: 256
 Training: 
-100% 235/235 [01:35<00:00,  2.47it/s]
-Done, total cost of epoch 17: 3350.306564129434
-0/1 error of testing set:  547.5270286323007 / 10000
-Time used:  121.36166405677795 sec
+100% 235/235 [01:46<00:00,  2.20it/s]
+Done, total cost of epoch 17: 3325.3440963629523
+0/1 error of testing set:  545.8700543841354 / 10000
+Time used:  136.16926908493042 sec
 ---------- epoch 17 end ------------
 ---------- epoch 18 begin ----------
 learning rate: 0.001
 batch size: 256
 Training: 
-100% 235/235 [01:35<00:00,  2.46it/s]
-Done, total cost of epoch 18: 3336.7129608853793
-0/1 error of testing set:  548.6892799606848 / 10000
-Time used:  121.27076053619385 sec
+100% 235/235 [01:47<00:00,  2.18it/s]
+Done, total cost of epoch 18: 3315.79971761972
+0/1 error of testing set:  540.4173100698248 / 10000
+Time used:  137.1046965122223 sec
 ---------- epoch 18 end ------------
 ---------- epoch 19 begin ----------
 learning rate: 0.001
 batch size: 256
 Training: 
-100% 235/235 [01:34<00:00,  2.47it/s]
-Done, total cost of epoch 19: 3325.5749031200126
-0/1 error of testing set:  546.0891453089437 / 10000
-Time used:  121.20659470558167 sec
+100% 235/235 [01:46<00:00,  2.22it/s]
+Done, total cost of epoch 19: 3303.4291573038668
+0/1 error of testing set:  538.1894005698996 / 10000
+Time used:  135.5941948890686 sec
 ---------- epoch 19 end ------------
 ---------- epoch 20 begin ----------
 learning rate: 0.001
 batch size: 256
 Training: 
-100% 235/235 [01:36<00:00,  2.44it/s]
-Done, total cost of epoch 20: 3313.2755844978838
-0/1 error of testing set:  544.2609009500472 / 10000
-Time used:  122.17951393127441 sec
+100% 235/235 [01:46<00:00,  2.21it/s]
+Done, total cost of epoch 20: 3290.2735111486377
+0/1 error of testing set:  537.8174157979986 / 10000
+Time used:  134.76019144058228 sec
 ---------- epoch 20 end ------------
-Total time used:  2456.4391610622406 sec
-tcmalloc: large alloc 1568006144 bytes == 0x4ff40000 @  0x7f2e1933c1e7 0x7f2e16e645e1 0x7f2e16ec7138 0x7f2e16e67e61 0x551b15 0x5aa6ec 0x50abb3 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x508245 0x50b403 0x635222 0x6352d7 0x638a8f 0x639631 0x4b0f40 0x7f2e18f39b97
-tcmalloc: large alloc 1568006144 bytes == 0x1089c0000 @  0x7f2e1933c1e7 0x7f2e16e645e1 0x7f2e16ec98e0 0x7f2e16ebec95 0x7f2e16f89bf0 0x7f2e16f547d7 0x50ac25 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x509d48 0x50aa7d 0x50c5b9 0x508245 0x50b403 0x635222 0x6352d7 0x638a8f 0x639631 0x4b0f40 0x7f2e18f39b97
-error rate: 0.05442609009500472
+Total time used:  2746.2340013980865 sec
+error rate: 0.05378174157979986
