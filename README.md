@@ -1,6 +1,6 @@
 # COMP3314: Machine Learning Assignment 2
 
-## Random Forest Classifier
+## LeNet5 Neural Network
 
 ### Install
 
@@ -8,7 +8,6 @@ This project requires **Python** and the following libraries:
 
 - [Numpy](http://numpy.org)
 - [Pandas](http://pandas.pydata.org)
-- [Scipy](http://docs.scipy.org/)
 
 ### Code
 

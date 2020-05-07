@@ -1,6 +1,5 @@
 from abc import ABC
 import math
-from scipy import signal
 from .helper import Helper
 import numpy as np
 
