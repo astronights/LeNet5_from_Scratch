@@ -4,6 +4,9 @@ DATA:
   train_image_path: dataset/MNIST/train-images-idx3-ubyte
   train_label_path: dataset/MNIST/train-labels-idx1-ubyte
 
+MODEL:
+  activation: ReLU
+
 TRAIN:
   epoch: 20
   batch_size: 256

@@ -173,7 +173,7 @@ def main():
     train_data, test_data = load_dataset(args.test_image_path, args.test_label_path, args.train_image_path,
                                          args.train_label_path)
     # For your implementation
-    model = LeNet5()
+    model = LeNet5(args.activation)
 
     # set lr for each epoch
     lr_global_list = np.array([5e-2] * 2 + [2e-2] * 3 + [1e-2] * 3 + [5e-3] * 4 + [1e-3] * 8)
