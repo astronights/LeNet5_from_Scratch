@@ -107,8 +107,8 @@ class MaxPooling(LeNetLayer):
 
     def forward_prop(self, image):
         self.inputs = image
-        output = image.reshape(image.shape[0], image.shape[1], image.shape[2]/self.kernel_dims[0], self.kernel_dims[0],
-                               image.shape[3]/self.kernel_dims[1], self.kernel_dims[1]).max(axis=(3,5))
+        output = image.reshape(image.shape[0], image.shape[1], image.shape[2]//self.kernel_dims[0], self.kernel_dims[0],
+                               image.shape[3]//self.kernel_dims[1], self.kernel_dims[1]).max(axis=(3,5))
         self.outputs = output
 
         if(self.activation):
